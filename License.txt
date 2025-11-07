@@ -9,46 +9,20 @@ Sound Effect by <a href="https://pixabay.com/users/dragon-studio-38165424/?utm_s
 
 Sound Effect by <a href="https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=89697">freesound_community</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=89697">Pixabay</a>
 
-Cartoon FX Remaster FREE" is a sample collection of stylized particle system prefabs, taken from the commercial "Cartoon FX Remaster" packs. 💥
+Cartoon FX Remaster FREE" is a sample collection of stylized particle system prefabs, taken from the commercial "Cartoon FX Remaster" packs. �
 
 
-Overview
-
-Package Content
-
-Releases
-
-Reviews
-
-Publisher info
-
-Asset Quality
-Hello everyone!
-It is selection of some my Low-Poly models make for Fantasy Medieval RPG's or same games. It have nice looking hand-painted textures, custom particles effects and Idle animations.
-
-It's free now, hope you enjoy!
-
-Contain 5 models:
-- Potions: 3 models of bottles with 3 colors and Item Idle animation;
-- Coin (with same animation);
-- Box of Pandora: 2 meshes for Idle and Crash animation. NOTE: Crash animation is Baked, NOT PHYSICS!
-
-Contain Diffuse, Normal(except Box), Specular(only bottles) Textures in 1024x1024 resolution.
-Also contain some my sprites for Particles Effects;
-Thanks, hope you like it :)
-
-Potions, Coin And Box of Pandora Pack
-Alexander Kotov
-FREE
-
+(MAP)
 RPG Tiny Hero Duo PBR Polyart
 Dungeon Mason
 FREE
 
+(ENEMY)
 Skeleton Animations FREE
 Kevin Iglesias
 FREE
 
+(MAIN PLAYER)
 RPG Poly Pack - Lite
 Gigel3d
 FREE
