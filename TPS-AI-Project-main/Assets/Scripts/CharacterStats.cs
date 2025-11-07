@@ -11,7 +11,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField]
     public float maxHealth = 100;
     public float power = 10;
-    //private int killScore = 200;
+  
     public float currentHealth { get; protected set; }
     private bool isDead = false;
     private Animator animator;
@@ -43,7 +43,7 @@ public class CharacterStats : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth + value, 0, maxHealth);
         Debug.Log("Current Health: " + currentHealth + "/" + maxHealth);
 
-        // ---------------- UI UPDATE ----------------
+     
         if (transform.CompareTag("Enemy"))
         {
             transform.Find("Canvas").GetChild(0).GetComponent<UnityEngine.UI.Image>().fillAmount = currentHealth / maxHealth;
@@ -55,12 +55,11 @@ public class CharacterStats : MonoBehaviour
                 string.Format("{0:0.##}", (currentHealth / maxHealth) * 100);
         }
 
-        // ---------------- DAMAGE SOUND ----------------
         if (value < 0) // only play when taking damage
         {
             if (transform.CompareTag("Player"))
             {
-                // 🎧 Play one of 5 player damage sounds
+            
                 if (LevelManager.instance != null && LevelManager.instance.playerDamageSounds != null && LevelManager.instance.playerDamageSounds.Length > 0)
                 {
                     AudioClip randomClip = LevelManager.instance.playerDamageSounds[
@@ -71,7 +70,7 @@ public class CharacterStats : MonoBehaviour
             }
             else if (transform.CompareTag("Enemy"))
             {
-                // 🎧 Play one of 5 enemy damage sounds
+               
                 if (LevelManager.instance != null && LevelManager.instance.enemyDamageSounds != null && LevelManager.instance.enemyDamageSounds.Length > 0)
                 {
                     AudioClip randomClip = LevelManager.instance.enemyDamageSounds[
@@ -82,7 +81,6 @@ public class CharacterStats : MonoBehaviour
             }
         }
 
-        // ---------------- DEATH HANDLING ----------------
         if (currentHealth <= 0f)
             Die();
     }
@@ -108,10 +106,14 @@ public class CharacterStats : MonoBehaviour
                 animator.SetTrigger("Die");
                 Debug.Log("Player death trigger 'Die' sent to Animator.");
             }
+            if (LevelManager.instance != null)
+                LevelManager.instance.ShowDefeatScreen();
+
+            return;
         }
         else if (isBoss)
         {
-            // ✅ Boss-specific handling
+            //  Boss-specific handling
             BossController boss = rootT.GetComponent<BossController>();
             if (boss != null)
             {
@@ -121,11 +123,11 @@ public class CharacterStats : MonoBehaviour
 
             // Notify LevelManager so it can end boss fight
             LevelManager.instance.OnEnemyDied(rootT.gameObject);
-            LevelManager.instance.OnAllEnemiesDefeated(); // triggers main theme again
+           
         }
         else if (isEnemy)
         {
-            // ✅ Normal enemies
+            //  Normal enemies
             EnemyController enemy = GetComponent<EnemyController>();
             if (enemy != null)
             {

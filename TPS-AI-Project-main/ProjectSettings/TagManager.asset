@@ -9,7 +9,7 @@ TagManager:
   - Health
   - Item
   - Coin
-  - Boss
+  - BossEnemy
   layers:
   - Default
   - TransparentFX

@@ -17,12 +17,19 @@ public class LevelManager : MonoBehaviour
     public int score;
     public int coins;
     public TextMeshProUGUI scoreText;
+    [Header("Victory")]
+    public string playerVictoryTrigger = "Victory"; 
+    public float victoryAnimLeadTime = 1.5f;        // let the anim play before pausing
 
     [Header("Particles")]
     public Transform[] Particle;
+
+    [Header("UI")]
+    public EndGameUI endGameUI;
+
     [Header("Gameplay")]
-    
-    private List<GameObject> enemies = new List<GameObject>();
+    private HashSet<GameObject> enemies = new HashSet<GameObject>();
+    private bool victoryStarted = false;  
     public bool bossFightActive = false;
     [Header("Music")]
     //public AudioSource musicSource;
@@ -33,7 +40,9 @@ public class LevelManager : MonoBehaviour
     public AudioClip[] playerDamageSounds;
     public AudioClip[] swordSwingSounds;
     public Transform MainCanvas;
-
+    [Header("Endgame Music")]
+    public AudioClip victoryMusic;
+    public AudioClip defeatMusic;
     [Header("Boss & Combat Sounds")]
     public AudioClip bossDeathSound;
     public AudioClip bossHitPlayerSound;
@@ -47,10 +56,11 @@ public class LevelManager : MonoBehaviour
     private void Awake()
         {
 
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
+        if (instance == null) instance = this;
+        else { Destroy(gameObject); return; }
+
+        // make sure this is reset when the scene loads
+        CharacterStats.playerIsDead = false;
     }
         void Start()
     {
@@ -73,22 +83,110 @@ public class LevelManager : MonoBehaviour
     public void UpdateEnemyList()
     {
         enemies.Clear();
-        enemies.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+
+        // Find all CharacterStats in the scene (ignores GFX tags completely)
+        var allStats = GameObject.FindObjectsOfType<CharacterStats>(includeInactive: true);
+        foreach (var cs in allStats)
+        {
+            if (cs == null || !cs.enabled) continue;
+
+            // Count as enemy if this object OR its parent has an EnemyController or BossController
+            bool countsAsEnemy = false;
+            if (cs.GetComponentInParent<EnemyController>() != null)
+                countsAsEnemy = true;
+            else if (cs.GetComponentInParent<BossController>() != null)
+                countsAsEnemy = true;
+
+            if (countsAsEnemy)
+                enemies.Add(cs.transform.root.gameObject);
+        }
+
+        PruneEnemies();
     }
+    
     public void OnEnemyDied(GameObject enemy)
     {
-        if (enemies.Contains(enemy))
-            enemies.Remove(enemy);
+        var root = enemy != null ? enemy.transform.root.gameObject : null;
 
-        if (enemies.Count == 0)
-            OnAllEnemiesDefeated();
+        PruneEnemies();
+        if (root != null) enemies.Remove(root);
+        PruneEnemies();
+
+        Debug.Log($"Enemy died. Remaining enemies: {enemies.Count}");
+        if (enemies.Count == 0) OnAllEnemiesDefeated();
     }
+    private void PruneEnemies()
+    {
+        enemies.RemoveWhere(e => e == null);
+    }
+
+    public void RegisterEnemy(GameObject enemy)
+    {
+        if (enemy == null) return;
+        enemies.Add(enemy.transform.root.gameObject);
+    }
+
     public void OnAllEnemiesDefeated()
     {
-        Debug.Log("All enemies defeated! Restoring main theme.");
-        bossFightActive = false;
-        PlayMusic(mainMusic);
+        if (victoryStarted) return;  
+        StartCoroutine(VictorySequence());
     }
+    private IEnumerator VictorySequence()
+    {
+        victoryStarted = true;
+        Debug.Log("All enemies defeated!");
+        Debug.Log("VictorySequence started.");
+        bossFightActive = false;
+
+        // Music: swap to victory theme (falls back to main if not set)
+        PlayMusic(victoryMusic != null ? victoryMusic : mainMusic);
+
+        // Stop gameplay HUD
+        if (MainCanvas != null) MainCanvas.gameObject.SetActive(false);
+
+        // Trigger player victory anim (and stop movement)
+        TryTriggerPlayerVictory();
+
+        yield return new WaitForSeconds(victoryAnimLeadTime);
+
+        if (endGameUI != null)
+        {
+            Debug.Log("Showing Victory UI.");
+            endGameUI.ShowVictory(score, coins);
+        }
+        else
+        {
+            Debug.LogError("EndGameUI reference is NOT assigned on LevelManager. Please drag the EndGameUI Canvas into the LevelManager.");
+        }
+
+        
+       
+
+
+    }
+    private void TryTriggerPlayerVictory()
+    {
+        if (player == null) return;
+        var anim = player.GetComponentInChildren<Animator>();
+        if (anim != null && !string.IsNullOrEmpty(playerVictoryTrigger))
+            anim.SetTrigger(playerVictoryTrigger);
+
+        var move = player.GetComponent<CharacterMovement>();
+        if (move != null) move.enabled = false;
+    }
+    public void ShowDefeatScreen()
+    {
+        // Music: defeat sting or theme
+        if (defeatMusic != null) PlayMusic(defeatMusic);
+
+        // Hide gameplay HUD
+        if (MainCanvas != null) MainCanvas.gameObject.SetActive(false);
+
+        // Show defeat (already has a short delay in EndGameUI)
+        if (endGameUI != null) endGameUI.ShowDefeat(score, coins);
+    }
+
+
     void Update()
         {
             // Handle level updates here

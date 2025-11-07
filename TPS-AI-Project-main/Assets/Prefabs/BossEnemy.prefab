@@ -157,6 +157,7 @@ MonoBehaviour:
   bossMusic: {fileID: 0}
   normalMusic: {fileID: 0}
   bossCam: {fileID: 0}
+  scaryLaugh: {fileID: 0}
 --- !u!1 &4044171183356338576
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,8 +209,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1.55, y: 0.93, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.55, y: 1.77, z: 1.36}
+  m_Center: {x: 0, y: 0, z: 0.12}
 --- !u!1 &6660789264398431654
 GameObject:
   m_ObjectHideFlags: 0

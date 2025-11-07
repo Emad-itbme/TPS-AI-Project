@@ -71,22 +71,22 @@ public class BossController : EnemyController
 
     IEnumerator DestroyAfterBossDeath()
     {
-        //  Return camera focus to player after boss dies
+        // Return camera focus, play death anim, etc...
         var camController = Object.FindObjectOfType<BossCameraController>();
-        if (camController != null)
-            camController.ReturnToPlayer();
+        if (camController != null) camController.ReturnToPlayer();
 
         // Wait for boss death animation to finish
         yield return new WaitForSeconds(bossDeathAnimationDuration);
 
-        //  Trigger victory sequence (animation, UI, or sound)
+        // ✅ Tell LevelManager that one enemy (the boss) died
         if (LevelManager.instance != null)
         {
-            Debug.Log("Boss defeated! Trigger victory sequence!");
-            // You can later call:
-            // LevelManager.instance.ShowVictoryScreen();
+            Debug.Log("Boss defeated! Notifying LevelManager.OnEnemyDied.");
+            LevelManager.instance.OnEnemyDied(gameObject);
         }
 
+        // Give LM one frame to process the list update, then destroy
+        yield return null;
         Destroy(gameObject);
     }
 }
