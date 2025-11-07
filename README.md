@@ -287,7 +287,8 @@ flowchart LR
 
 ##  Oyun Görseli
 
-Unity oyun motorunda geliştirilen sahneden alınan bir görüntü.  
+Unity oyun motorunda geliştirilen sahneden alınan bir görüntü. 
+![Gameplay](TPS-AI-Project-main/Rapor/GamePlay.png)
 Düşmanlar `NavMeshAgent` üzerinde hareket eder, kamera `Cinemachine` ile oyuncuyu dinamik biçimde takip eder.
 
 ---
