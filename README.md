@@ -23,7 +23,7 @@
 
 **Grup No:** 37  
 **Proje Dönemi:** 2025–2026 Güz  
-**Danışman:** Öğr. Gör. *(isim eklenecek)*  
+
 
 ---
 
